@@ -1,30 +1,47 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
+    <h2>Your Inventory ({{gearItems.length}}/{{totalGearWeight}})</h2>
     <ul>
-      <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank">Twitter</a></li>
+      <li v-for="gearItem in gearItems">
+        {{gearItem.name}} - {{gearItem.description}} -
+        <input type="number" v-model.number="gearItem.weight">
+      </li>
     </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li><a href="http://router.vuejs.org/" target="_blank">vue-router</a></li>
-      <li><a href="http://vuex.vuejs.org/" target="_blank">vuex</a></li>
-      <li><a href="http://vue-loader.vuejs.org/" target="_blank">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
-    </ul>
+    <form id="form" class="form-inline" v-on:submit.prevent="addNewGearItem">
+      <div class="form-group">
+        <label for="gearItemName">Name:</label>
+        <input type="text" id="gearItemName" class="form-control" v-model="newGearItem.name">
+      </div>
+      <div class="form-group">
+        <label for="gearItemDescription">Description:</label>
+        <input type="text" id="gearItemDescription" class="form-control" v-model="newGearItem.description">
+      </div>
+      <div class="form-group">
+        <label for="gearItemWeight">Weight:</label>
+        <input type="number" id="gearItemWeight" class="form-control" v-model.number="newGearItem.weight">
+      </div>
+      <input type="submit" class="btn btn-primary" value="Add Item">
+    </form>
   </div>
 </template>
 
 <script>
 export default {
   name: 'app',
+  computed: {
+    totalGearWeight () {
+      return this.gearItems.reduce((sum, gearItem) => sum + gearItem.weight, 0)}
+  },
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      gearItems: [{name: "foo", description: "I'm your first gear item", weight: 123}, {name: 'bar', weight: 321}],
+      newGearItem: {}
+    }
+  },
+  methods: {
+    addNewGearItem () {
+      this.gearItems.push(this.newGearItem);
+      this.newGearItem = {};
     }
   }
 }
@@ -45,12 +62,12 @@ h1, h2 {
 }
 
 ul {
-  list-style-type: none;
+  //list-style-type: none;
   padding: 0;
 }
 
 li {
-  display: inline-block;
+  //display: inline-block;
   margin: 0 10px;
 }
 
