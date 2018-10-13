@@ -32,14 +32,19 @@ export default {
     totalGearWeight () {
       return this.gearItems.reduce((sum, gearItem) => sum + gearItem.weight, 0)}
   },
+  created () {
+    this.store = this.$hoodie.store.withIdPrefix('gearItems');
+    this.store.findAll().then(gearItems => this.gearItems = gearItems);
+  },
   data () {
     return {
-      gearItems: [{name: "foo", description: "I'm your first gear item", weight: 123}, {name: 'bar', weight: 321}],
+      gearItems: [],
       newGearItem: {}
     }
   },
   methods: {
     addNewGearItem () {
+      this.store.add(this.newGearItem);
       this.gearItems.push(this.newGearItem);
       this.newGearItem = {};
     }
